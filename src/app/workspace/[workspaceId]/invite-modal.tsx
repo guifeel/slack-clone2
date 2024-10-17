@@ -1,11 +1,9 @@
-import { toast } from "sonner";
 import { CopyIcon, RefreshCcw } from "lucide-react";
+import { toast } from "sonner";
 
 import { useNewJoinCode } from "@/features/workspaces/api/use-new-join-code";
 
 import { Button } from "@/components/ui/button";
-import { useConfirm } from "@/hooks/use-confirm";
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import {
   Dialog,
   DialogClose,
@@ -14,24 +12,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 interface InviteModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   name: string;
   joinCode: string;
-};
+}
 
-export const InviteModal = ({ 
-  open, 
+export const InviteModal = ({
+  open,
   setOpen,
   name,
   joinCode,
 }: InviteModalProps) => {
   const workspaceId = useWorkspaceId();
   const [ConfirmDialog, confirm] = useConfirm(
-    "Are you sure?",
-    "This will deactivate the current invite code and generate a new one.",
+    "你确定吗？",
+    "这将停用当前的邀请码并生成新的邀请码。"
   );
 
   const { mutate, isPending } = useNewJoinCode();
@@ -41,14 +41,17 @@ export const InviteModal = ({
 
     if (!ok) return;
 
-    mutate({ workspaceId }, {
-      onSuccess: () => {
-        toast.success("Invite code regenerated");
-      },
-      onError: () => {
-        toast.error("Failed to regenerate invite code");
+    mutate(
+      { workspaceId },
+      {
+        onSuccess: () => {
+          toast.success("邀请码更新成功");
+        },
+        onError: () => {
+          toast.error("邀请码复制失败");
+        },
       }
-    });
+    );
   };
 
   const handleCopy = () => {
@@ -56,7 +59,7 @@ export const InviteModal = ({
 
     navigator.clipboard
       .writeText(inviteLink)
-      .then(() => toast.success("Invite link copied to clipboard"));
+      .then(() => toast.success("邀请链接已复制到剪贴板"));
   };
 
   return (
@@ -65,31 +68,31 @@ export const InviteModal = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Invite people to {name}</DialogTitle>
+            <DialogTitle>邀请 {name}</DialogTitle>
             <DialogDescription>
-              Use the code below to invite people to your workspace
+              使用下面的代码邀请人们到您的工作区
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-y-4 items-center justify-center py-10">
             <p className="text-4xl font-bold tracking-widest uppercase">
               {joinCode}
             </p>
-            <Button
-              onClick={handleCopy}
-              variant="ghost"
-              size="sm"
-            >
-              Copy link
+            <Button onClick={handleCopy} variant="ghost" size="sm">
+              复制链接
               <CopyIcon className="size-4 ml-2" />
             </Button>
           </div>
           <div className="flex items-center justify-between w-full">
-            <Button disabled={isPending} onClick={handleNewCode} variant="outline">
-              New code
+            <Button
+              disabled={isPending}
+              onClick={handleNewCode}
+              variant="outline"
+            >
+              更新邀请码
               <RefreshCcw className="size-4 ml-2" />
             </Button>
             <DialogClose asChild>
-              <Button>Close</Button>
+              <Button>关闭</Button>
             </DialogClose>
           </div>
         </DialogContent>

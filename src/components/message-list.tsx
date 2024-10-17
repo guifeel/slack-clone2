@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { Loader } from "lucide-react";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+import { Loader } from "lucide-react";
+import { useState } from "react";
 
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { GetMessagesReturnType } from "@/features/messages/api/use-get-messages";
 
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
-import { Message } from "./message";
 import { ChannelHero } from "./channel-hero";
 import { ConversationHero } from "./conversation-hero";
+import { Message } from "./message";
 
 import { Id } from "../../convex/_generated/dataModel";
 
@@ -25,12 +25,12 @@ interface MessageListProps {
   loadMore: () => void;
   isLoadingMore: boolean;
   canLoadMore: boolean;
-};
+}
 
 const formatDateLabel = (dateStr: string) => {
   const date = new Date(dateStr);
-  if (isToday(date)) return "Today";
-  if (isYesterday(date)) return "Yesterday";
+  if (isToday(date)) return "今天";
+  if (isYesterday(date)) return "昨天";
   return format(date, "EEEE, MMMM d");
 };
 
@@ -50,18 +50,15 @@ export const MessageList = ({
   const workspaceId = useWorkspaceId();
   const { data: currentMember } = useCurrentMember({ workspaceId });
 
-  const groupedMessages = data?.reduce(
-    (groups, message) => {
-      const date = new Date(message._creationTime);
-      const dateKey = format(date, "yyyy-MM-dd");
-      if (!groups[dateKey]) {
-        groups[dateKey] = [];
-      }
-      groups[dateKey].unshift(message);
-      return groups;
-    },
-    {} as Record<string, typeof data>
-  );
+  const groupedMessages = data?.reduce((groups, message) => {
+    const date = new Date(message._creationTime);
+    const dateKey = format(date, "yyyy-MM-dd");
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].unshift(message);
+    return groups;
+  }, {} as Record<string, typeof data>);
 
   return (
     <div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto messages-scrollbar">
@@ -105,7 +102,7 @@ export const MessageList = ({
                 threadName={message.threadName}
                 threadTimestamp={message.threadTimestamp}
               />
-            )
+            );
           })}
         </div>
       ))}
@@ -136,16 +133,10 @@ export const MessageList = ({
         </div>
       )}
       {variant === "channel" && channelName && channelCreationTime && (
-        <ChannelHero
-          name={channelName}
-          creationTime={channelCreationTime}
-        />
+        <ChannelHero name={channelName} creationTime={channelCreationTime} />
       )}
       {variant === "conversation" && (
-        <ConversationHero
-          name={memberName}
-          image={memberImage}
-        />
+        <ConversationHero name={memberName} image={memberImage} />
       )}
     </div>
   );

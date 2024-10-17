@@ -1,21 +1,21 @@
-import { toast } from "sonner";
-import dynamic from "next/dynamic";
 import { format, isToday, isYesterday } from "date-fns";
+import dynamic from "next/dynamic";
+import { toast } from "sonner";
 
-import { useUpdateMessage } from "@/features/messages/api/use-update-message";
 import { useRemoveMessage } from "@/features/messages/api/use-remove-message";
+import { useUpdateMessage } from "@/features/messages/api/use-update-message";
 import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction";
 
-import { cn } from "@/lib/utils";
-import { usePanel } from "@/hooks/use-panel";
 import { useConfirm } from "@/hooks/use-confirm";
+import { usePanel } from "@/hooks/use-panel";
+import { cn } from "@/lib/utils";
 
 import { Hint } from "./hint";
-import { Toolbar } from "./toolbar";
-import { Thumbnail } from "./thumbnail";
 import { Reactions } from "./reactions";
 import { ThreadBar } from "./thread-bar";
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { Thumbnail } from "./thumbnail";
+import { Toolbar } from "./toolbar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import { Doc, Id } from "../../convex/_generated/dataModel";
 
@@ -46,10 +46,16 @@ interface MessageProps {
   threadImage?: string;
   threadName?: string;
   threadTimestamp?: number;
-};
+}
 
 const formatFullTime = (date: Date) => {
-  return `${isToday(date) ? "Today" : isYesterday(date) ? "Yesterday" : format(date, "MMM d, yyyy")} at ${format(date, "h:mm:ss a")}`;
+  return `${
+    isToday(date)
+      ? "Today"
+      : isYesterday(date)
+      ? "Yesterday"
+      : format(date, "MMM d, yyyy")
+  } at ${format(date, "h:mm:ss a")}`;
 };
 
 export const Message = ({
@@ -75,22 +81,28 @@ export const Message = ({
   const { parentMessageId, onOpenMessage, onOpenProfile, onClose } = usePanel();
 
   const [ConfirmDialog, confirm] = useConfirm(
-    "Delete message",
-    "Are you sure you want to delete this message? This cannot be undone."
+    "删除消息",
+    "您确定要删除此邮件吗？这是无法撤消的。"
   );
 
-  const { mutate: updateMessage, isPending: isUpdatingMessage } = useUpdateMessage();
-  const { mutate: removeMessage, isPending: isRemovingMessage } = useRemoveMessage();
-  const { mutate: toggleReaction, isPending: isTogglingReaction } = useToggleReaction();
+  const { mutate: updateMessage, isPending: isUpdatingMessage } =
+    useUpdateMessage();
+  const { mutate: removeMessage, isPending: isRemovingMessage } =
+    useRemoveMessage();
+  const { mutate: toggleReaction, isPending: isTogglingReaction } =
+    useToggleReaction();
 
   const isPending = isUpdatingMessage || isTogglingReaction;
 
   const handleReaction = (value: string) => {
-    toggleReaction({ messageId: id, value }, {
-      onError: () => {
-        toast.error("Failed to toggle reaction");
-      },
-    });
+    toggleReaction(
+      { messageId: id, value },
+      {
+        onError: () => {
+          toast.error("Failed to toggle reaction");
+        },
+      }
+    );
   };
 
   const handleRemove = async () => {
@@ -98,42 +110,50 @@ export const Message = ({
 
     if (!ok) return;
 
-    removeMessage({ id }, {
-      onSuccess: () => {
-        toast.success("Message deleted");
+    removeMessage(
+      { id },
+      {
+        onSuccess: () => {
+          toast.success("消息删除成功");
 
-        if (parentMessageId === id) {
-          onClose();
-        }
-      },
-      onError: () => {
-        toast.error("Failed to delete message");
-      },
-    });
+          if (parentMessageId === id) {
+            onClose();
+          }
+        },
+        onError: () => {
+          toast.error("消息删除失败");
+        },
+      }
+    );
   };
 
   const handleUpdate = ({ body }: { body: string }) => {
-    updateMessage({ id, body }, {
-      onSuccess: () => {
-        toast.success("Message updated");
-        setEditingId(null);
-      },
-      onError: () => {
-        toast.error("Failed to update message");
+    updateMessage(
+      { id, body },
+      {
+        onSuccess: () => {
+          toast.success("消息更新成功");
+          setEditingId(null);
+        },
+        onError: () => {
+          toast.error("消息更新失败");
+        },
       }
-    });
+    );
   };
 
   if (isCompact) {
     return (
       <>
         <ConfirmDialog />
-        <div className={cn(
-          "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
-          isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]",
-          isRemovingMessage &&
-            "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
-        )}>
+        <div
+          className={cn(
+            "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
+            isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]",
+            isRemovingMessage &&
+              "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
+          )}
+        >
           <div className="flex items-start gap-2">
             <Hint label={formatFullTime(new Date(createdAt))}>
               <button className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 w-[40px] leading-[22px] text-center hover:underline">
@@ -191,19 +211,19 @@ export const Message = ({
   return (
     <>
       <ConfirmDialog />
-      <div className={cn(
-        "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
-        isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]",
-        isRemovingMessage &&
-          "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
-      )}>
+      <div
+        className={cn(
+          "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
+          isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]",
+          isRemovingMessage &&
+            "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
+        )}
+      >
         <div className="flex items-start gap-2">
           <button onClick={() => onOpenProfile(memberId)}>
             <Avatar>
               <AvatarImage src={authorImage} />
-              <AvatarFallback>
-                {avatarFallback}
-              </AvatarFallback>
+              <AvatarFallback>{avatarFallback}</AvatarFallback>
             </Avatar>
           </button>
           {isEditing ? (
@@ -219,7 +239,10 @@ export const Message = ({
           ) : (
             <div className="flex flex-col w-full overflow-hidden">
               <div className="text-sm">
-                <button onClick={() => onOpenProfile(memberId)} className="font-bold text-primary hover:underline">
+                <button
+                  onClick={() => onOpenProfile(memberId)}
+                  className="font-bold text-primary hover:underline"
+                >
                   {authorName}
                 </button>
                 <span>&nbsp;&nbsp;</span>
@@ -258,5 +281,5 @@ export const Message = ({
         )}
       </div>
     </>
-  )
+  );
 };

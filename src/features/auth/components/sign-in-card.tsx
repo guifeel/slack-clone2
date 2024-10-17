@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import { TriangleAlert } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { TriangleAlert } from "lucide-react";
+import { useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 import { Button } from "@/components/ui/button";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -19,7 +19,7 @@ import { SignInFlow } from "../types";
 
 interface SignInCardProps {
   setState: (state: SignInFlow) => void;
-};
+}
 
 export const SignInCard = ({ setState }: SignInCardProps) => {
   const { signIn } = useAuthActions();
@@ -44,21 +44,16 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 
   const onProviderSignIn = (value: "github" | "google") => {
     setPending(true);
-    signIn(value)
-      .finally(() => {
-        setPending(false);
-      })
+    signIn(value).finally(() => {
+      setPending(false);
+    });
   };
 
   return (
     <Card className="w-full h-full p-8">
       <CardHeader className="px-0 pt-0">
-        <CardTitle>
-          Login to continue
-        </CardTitle>
-        <CardDescription>
-          Use your email or another service to continue
-        </CardDescription>
+        <CardTitle>登录</CardTitle>
+        <CardDescription>使用您的电子邮件或其他服务继续</CardDescription>
       </CardHeader>
       {!!error && (
         <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
@@ -72,7 +67,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             disabled={pending}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
+            placeholder="邮箱"
             type="email"
             required
           />
@@ -80,12 +75,12 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             disabled={pending}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            placeholder="密码"
             type="password"
             required
           />
           <Button type="submit" className="w-full" size="lg" disabled={pending}>
-            Continue
+            继续
           </Button>
         </form>
         <Separator />
@@ -98,7 +93,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             className="w-full relative"
           >
             <FcGoogle className="size-5 absolute top-3 left-2.5" />
-            Continue with Google
+            谷歌登陆
           </Button>
           <Button
             disabled={pending}
@@ -108,11 +103,17 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             className="w-full relative"
           >
             <FaGithub className="size-5 absolute top-3 left-2.5" />
-            Continue with Github
+            Github登陆
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          Don&apos;t have an account? <span onClick={() => setState("signUp")} className="text-sky-700 hover:underline cursor-pointer">Sign up</span>
+          还没有账号？{" "}
+          <span
+            onClick={() => setState("signUp")}
+            className="text-sky-700 hover:underline cursor-pointer"
+          >
+            注册
+          </span>
         </p>
       </CardContent>
     </Card>

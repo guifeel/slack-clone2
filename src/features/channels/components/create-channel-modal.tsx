@@ -1,7 +1,8 @@
-import { toast } from "sonner";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import { useCreateChannel } from "../api/use-create-channel";
@@ -45,12 +45,12 @@ export const CreateChannelModal = () => {
           handleClose();
         },
         onError: () => {
-          toast.error("Failed to create channel");
-        }
-      },
+          toast.error("工作区创建失败");
+        },
+      }
     );
   };
-  
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
@@ -66,12 +66,10 @@ export const CreateChannelModal = () => {
             autoFocus
             minLength={3}
             maxLength={80}
-            placeholder="e.g. plan-budget"
+            placeholder="工作名..."
           />
           <div className="flex justify-end">
-            <Button disabled={isPending}>
-              Create
-            </Button>
+            <Button disabled={isPending}>创建</Button>
           </div>
         </form>
       </DialogContent>

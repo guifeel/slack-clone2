@@ -6,23 +6,22 @@ import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 
 import { Button } from "@/components/ui/button";
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 export const WorkspaceSwitcher = () => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
   const [_open, setOpen] = useCreateWorkspaceModal();
-  
+
   const { data: workspaces, isLoading: workspacesLoading } = useGetWorkspaces();
-  const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({ 
-    id: workspaceId
+  const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({
+    id: workspaceId,
   });
 
   const filteredWorkspaces = workspaces?.filter(
@@ -46,9 +45,7 @@ export const WorkspaceSwitcher = () => {
           className="cursor-pointer flex-col justify-start items-start capitalize"
         >
           {workspace?.name}
-          <span className="text-xs text-muted-foreground">
-            Active workspace
-          </span>
+          <span className="text-xs text-muted-foreground">激活工作区</span>
         </DropdownMenuItem>
         {filteredWorkspaces?.map((workspace) => (
           <DropdownMenuItem
@@ -69,7 +66,7 @@ export const WorkspaceSwitcher = () => {
           <div className="size-9 relative overflow-hidden bg-[#F2F2F2] text-slate-800 font-semibold text-lg rounded-md flex items-center justify-center mr-2">
             <Plus />
           </div>
-          Create a new workspace
+          创建一个新的工作区
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

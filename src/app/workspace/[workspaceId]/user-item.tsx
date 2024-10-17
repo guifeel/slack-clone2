@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
+import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button"
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { cn } from "@/lib/utils";
 
 import { Id } from "../../../../convex/_generated/dataModel";
 
@@ -20,7 +20,7 @@ const userItemVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  },
+  }
 );
 
 interface UserItemProps {
@@ -28,11 +28,11 @@ interface UserItemProps {
   label?: string;
   image?: string;
   variant?: VariantProps<typeof userItemVariants>["variant"];
-};
+}
 
-export const UserItem = ({ 
+export const UserItem = ({
   id,
-  label = "Member",
+  label = "成员",
   image,
   variant,
 }: UserItemProps) => {

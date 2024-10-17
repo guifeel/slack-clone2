@@ -1,18 +1,18 @@
-import Quill from "quill";
-import { toast } from "sonner";
-import dynamic from "next/dynamic";
-import { useRef, useState } from "react";
-import { AlertTriangle, Loader, XIcon } from "lucide-react";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+import { AlertTriangle, Loader, XIcon } from "lucide-react";
+import dynamic from "next/dynamic";
+import Quill from "quill";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 
-import { useGetMessage } from "@/features/messages/api/use-get-message";
-import { useGetMessages } from "@/features/messages/api/use-get-messages";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useCreateMessage } from "@/features/messages/api/use-create-message";
+import { useGetMessage } from "@/features/messages/api/use-get-message";
+import { useGetMessages } from "@/features/messages/api/use-get-messages";
 import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-url";
 
-import { Button } from "@/components/ui/button";
 import { Message } from "@/components/message";
+import { Button } from "@/components/ui/button";
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
@@ -25,7 +25,7 @@ const TIME_THRESHOLD = 5;
 interface ThreadProps {
   messageId: Id<"messages">;
   onClose: () => void;
-};
+}
 
 type CreateMesageValues = {
   channelId: Id<"channels">;
@@ -56,18 +56,20 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
   const { mutate: generateUploadUrl } = useGenerateUploadUrl();
 
   const { data: currentMember } = useCurrentMember({ workspaceId });
-  const { data: message, isLoading: loadingMessage } = useGetMessage({ id: messageId });
-  const { results, status, loadMore } = useGetMessages({ 
+  const { data: message, isLoading: loadingMessage } = useGetMessage({
+    id: messageId,
+  });
+  const { results, status, loadMore } = useGetMessages({
     channelId,
     parentMessageId: messageId,
   });
 
   const canLoadMore = status === "CanLoadMore";
   const isLoadingMore = status === "LoadingMore";
-  
+
   const handleSubmit = async ({
     body,
-    image
+    image,
   }: {
     body: string;
     image: File | null;
@@ -117,24 +119,21 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
     }
   };
 
-  const groupedMessages = results?.reduce(
-    (groups, message) => {
-      const date = new Date(message._creationTime);
-      const dateKey = format(date, "yyyy-MM-dd");
-      if (!groups[dateKey]) {
-        groups[dateKey] = [];
-      }
-      groups[dateKey].unshift(message);
-      return groups;
-    },
-    {} as Record<string, typeof results>
-  );
+  const groupedMessages = results?.reduce((groups, message) => {
+    const date = new Date(message._creationTime);
+    const dateKey = format(date, "yyyy-MM-dd");
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].unshift(message);
+    return groups;
+  }, {} as Record<string, typeof results>);
 
   if (loadingMessage || status === "LoadingFirstPage") {
     return (
       <div className="h-full flex flex-col">
         <div className="h-[49px] flex justify-between items-center px-4 border-b">
-          <p className="text-lg font-bold">Thread</p>
+          <p className="text-lg font-bold">对话</p>
           <Button onClick={onClose} size="iconSm" variant="ghost">
             <XIcon className="size-5 stroke-[1.5]" />
           </Button>
@@ -150,14 +149,14 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
     return (
       <div className="h-full flex flex-col">
         <div className="h-[49px] flex justify-between items-center px-4 border-b">
-          <p className="text-lg font-bold">Thread</p>
+          <p className="text-lg font-bold">对话</p>
           <Button onClick={onClose} size="iconSm" variant="ghost">
             <XIcon className="size-5 stroke-[1.5]" />
           </Button>
         </div>
         <div className="flex flex-col gap-y-2 h-full items-center justify-center">
           <AlertTriangle className="size-5 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Message not found</p>
+          <p className="text-sm text-muted-foreground">消息未找到</p>
         </div>
       </div>
     );
@@ -166,7 +165,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
   return (
     <div className="h-full flex flex-col">
       <div className="h-[49px] flex justify-between items-center px-4 border-b">
-        <p className="text-lg font-bold">Thread</p>
+        <p className="text-lg font-bold">对话</p>
         <Button onClick={onClose} size="iconSm" variant="ghost">
           <XIcon className="size-5 stroke-[1.5]" />
         </Button>
@@ -212,7 +211,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
                   threadName={message.threadName}
                   threadTimestamp={message.threadTimestamp}
                 />
-              )
+              );
             })}
           </div>
         ))}

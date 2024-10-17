@@ -1,5 +1,5 @@
-import { useState } from "react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
+import { useState } from "react";
 
 import {
   Popover,
@@ -17,7 +17,7 @@ interface EmojiPopoverProps {
   children: React.ReactNode;
   hint?: string;
   onEmojiSelect: (value: string) => void;
-};
+}
 
 export const EmojiPopover = ({
   children,
@@ -45,16 +45,20 @@ export const EmojiPopover = ({
           delayDuration={50}
         >
           <PopoverTrigger asChild>
-            <TooltipTrigger asChild>
-              {children}
-            </TooltipTrigger>
+            <TooltipTrigger asChild>{children}</TooltipTrigger>
           </PopoverTrigger>
           <TooltipContent className="bg-black text-white border border-white/5">
             <p className="font-medium text-xs">{hint}</p>
           </TooltipContent>
         </Tooltip>
         <PopoverContent className="p-0 w-full border-none shadow-none">
-          <EmojiPicker onEmojiClick={onSelect} />
+          <EmojiPicker
+            onEmojiSelect={onSelect}
+            // 本地化 https://missiveapp.com/open/emoji-mart
+            locale="zh"
+            previewPosition="none"
+            searchPosition="none"
+          />
         </PopoverContent>
       </Popover>
     </TooltipProvider>
